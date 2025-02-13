@@ -7,8 +7,8 @@ class MembershipPlanSerializer(serializers.ModelSerializer):
         fields='__all__'
         
 class MemberSubscriptionSerializer(serializers.ModelSerializer):
-    member=serializers.StringRelatedField(many=False)
-    plan=serializers.StringRelatedField(many=False)
+    # member=serializers.StringRelatedField(many=False)
+    # plan=serializers.StringRelatedField(many=False)
     class Meta:
         model=models.MemberSubscriptionModel
         fields='__all__'
