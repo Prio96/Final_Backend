@@ -3,11 +3,16 @@ from . import models
 from django.contrib.auth.models import User
 
 class StaffSerializer(serializers.ModelSerializer):
-    # user=serializers.StringRelatedField(many=False)
+    user=serializers.SlugRelatedField(
+        queryset=User.objects.all(),
+        slug_field='username'
+    )
     
     class Meta:
         model=models.StaffModel
         fields='__all__'
+    
+    
         
 class RegistrationSerializer(serializers.ModelSerializer):
     confirm_password=serializers.CharField(required=True)

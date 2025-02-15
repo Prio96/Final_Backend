@@ -12,10 +12,5 @@ from django.contrib.auth.models import User
 class MemberViewset(viewsets.ModelViewSet):
     queryset=models.MemberModel.objects.all()
     serializer_class=serializers.MemberSerializer
+    permission_classes=[IsAuthenticated,IsStaff]
     
-    def get_permissions(self):
-        if self.action in ['list', 'retrieve', 'destroy', 'update', 'partial_update']:
-            self.permission_classes=[IsAuthenticated,IsStaff]
-        else:
-            self.permission_classes=[IsAuthenticated]
-        return super().get_permissions()

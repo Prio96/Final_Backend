@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from django.contrib.auth.models import User
 from staff.permissions import IsStaff,UpdateOwnDetails,IsMember
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
 from subscription.models import MemberSubscriptionModel
 from staff.models import is_member
 class SpecializationViewset(viewsets.ModelViewSet):
@@ -56,18 +57,25 @@ class FitnessClassBookingViewset(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         if is_member(user):
-            # Members can only see their own subscriptions
+            # Members can only see their own bookings
             return models.FitnessClassBookingModel.objects.filter(member__user=user)
-        # Staff can see all subscriptions
+        # Staff can see all bookings
         return super().get_queryset()
-    # Create action has been set in a way that user will be able to book class only using their own credentials. 
-    # Even if they try to book classes using someone else's credentials, that will be ignored and the wrong credential will be overwritten by the actual user's credentials. 
-    # Also the staff will be able to book classes using anyone's name
-    def perform_create(self, serializer):
-        user = self.request.user
-        if is_member(user):
-            member_instance = models.MemberModel.objects.get(user=user)
-            serializer.save(member=member_instance)
-        else:
+    
+class BookClassOnlineAPIView(APIView):
+    #This view is only applicable for members. Staffs will have to use FitnessClassBookingViewset to book someone.
+    permission_classes=[IsAuthenticated,IsMember]
+    
+    def post(self,request,*args,**kwargs):
+        user=request.user
+        if not is_member(user):
+            return Response({"error": "Only members can book classes."}, status=status.HTTP_403_FORBIDDEN)
+        
+        # Create the booking
+        serializer = serializers.FitnessClassBookingSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
             serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         

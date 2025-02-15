@@ -10,5 +10,6 @@ router.register('available_time',views.FitnessClassTimeViewset)
 router.register('instructors',views.InstructorViewset)
 router.register('bookings',views.FitnessClassBookingViewset)
 urlpatterns = [
-    path('',include(router.urls))
+    path('',include(router.urls)),
+    path('book_class/',views.BookClassOnlineAPIView.as_view(),name="book_class")
 ]

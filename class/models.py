@@ -1,11 +1,7 @@
 from django.db import models
 from member.models import MemberModel
 # Create your models here.
-BOOKING_STATUS=[
-    ('Booked','Booked'),
-    ('Canceled','Canceled'),
-    ('Attended','Attended'),
-]
+
 class SpecializationModel(models.Model):
     name=models.CharField(max_length=50)
 
@@ -15,6 +11,7 @@ class SpecializationModel(models.Model):
 class InstructorModel(models.Model):
     name=models.CharField(max_length=100)
     email=models.EmailField(unique=True)
+    image=models.ImageField(upload_to='class/images/',null=True)
     phone=models.CharField(max_length=12)
     specialization=models.ManyToManyField(SpecializationModel)#Assuming an instructor can have variety of specializations
     bio=models.TextField()
@@ -41,7 +38,7 @@ class FitnessClassModel(models.Model):
 class FitnessClassBookingModel(models.Model):
     class_session=models.ForeignKey(FitnessClassModel,on_delete=models.CASCADE) # A class (object) can have multiple bookings (objects)
     member=models.ForeignKey(MemberModel,on_delete=models.CASCADE)
-    status=models.CharField(max_length=15,default='Booked',choices=BOOKING_STATUS)
+    booking_date=models.DateField(auto_now_add=True)
     
     def __str__(self):
-        return f"{self.member.user.first_name} {self.member.user.last_name} - {self.class_session.name}"
+        return f"{self.member.user.first_name} {self.member.user.last_name} - {self.class_session.name} - {self.booking_date}"

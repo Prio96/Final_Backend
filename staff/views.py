@@ -14,9 +14,7 @@ from rest_framework.authtoken.models import Token
 class StaffViewset(viewsets.ModelViewSet):
     queryset=models.StaffModel.objects.all()
     serializer_class=serializers.StaffSerializer
-    def get_permissions(self):
-        self.permission_classes=[IsAuthenticated,IsStaff]
-        return super().get_permissions()
+    permission_classes=[IsAuthenticated,IsStaff]
     
 class UserRegistrationApiView(APIView):
     serializer_class=serializers.RegistrationSerializer
