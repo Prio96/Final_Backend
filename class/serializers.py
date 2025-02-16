@@ -26,7 +26,7 @@ class FitnessClassTimeSerializer(serializers.ModelSerializer):
     
 class FitnessClassSerializer(serializers.ModelSerializer):
     time=serializers.SlugRelatedField(
-        queryset=models.FitnessClassModel.objects.all(),
+        queryset=models.FitnessClassTimeModel.objects.all(),
         many=True,
         slug_field='name'
     )
