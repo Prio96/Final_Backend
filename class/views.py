@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework import status
 from subscription.models import MemberSubscriptionModel
 from staff.models import is_member
+from rest_framework.parsers import MultiPartParser, FormParser
 class SpecializationViewset(viewsets.ModelViewSet):
     queryset=models.SpecializationModel.objects.all().prefetch_related('fitnessclassmodel_set')
     serializer_class=serializers.SpecializationSerializer
@@ -22,6 +23,7 @@ class SpecializationViewset(viewsets.ModelViewSet):
 class InstructorViewset(viewsets.ModelViewSet):
     queryset=models.InstructorModel.objects.all().prefetch_related('specialization')
     serializer_class=serializers.InstructorSerializer
+    parser_classes = (MultiPartParser, FormParser)
     def get_permissions(self):
         if self.action in ['list','retrieve']:
             self.permission_classes=[AllowAny]

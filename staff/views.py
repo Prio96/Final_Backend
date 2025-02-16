@@ -10,12 +10,13 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from rest_framework.authtoken.models import Token
+from rest_framework.parsers import MultiPartParser, FormParser
 
 class StaffViewset(viewsets.ModelViewSet):
     queryset=models.StaffModel.objects.all()
     serializer_class=serializers.StaffSerializer
     permission_classes=[IsAuthenticated,IsStaff]
-    
+    parser_classes = (MultiPartParser, FormParser)
 class UserRegistrationApiView(APIView):
     serializer_class=serializers.RegistrationSerializer
     

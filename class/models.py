@@ -1,6 +1,7 @@
 from django.db import models
 from member.models import MemberModel
 from cloudinary.models import CloudinaryField
+
 # Create your models here.
 
 class SpecializationModel(models.Model):

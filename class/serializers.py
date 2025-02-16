@@ -2,12 +2,14 @@ from rest_framework import serializers
 from . import models
 from member.models import MemberModel
 from staff.models import is_member
+
 class SpecializationSerializer(serializers.ModelSerializer):
     class Meta:
         model=models.SpecializationModel
         fields='__all__'
 
 class InstructorSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField()
     specialization=serializers.SlugRelatedField(
         queryset=models.SpecializationModel.objects.all(),
         many=True,
