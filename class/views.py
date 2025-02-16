@@ -11,7 +11,7 @@ from rest_framework import status
 from subscription.models import MemberSubscriptionModel
 from staff.models import is_member
 class SpecializationViewset(viewsets.ModelViewSet):
-    queryset=models.SpecializationModel.objects.all()
+    queryset=models.SpecializationModel.objects.all().prefetch_related('fitnessclassmodel_set')
     serializer_class=serializers.SpecializationSerializer
     def get_permissions(self):
         if self.action in ['list','retrieve']:
@@ -20,7 +20,7 @@ class SpecializationViewset(viewsets.ModelViewSet):
             self.permission_classes=[IsAuthenticated,IsStaff]
         return super().get_permissions()
 class InstructorViewset(viewsets.ModelViewSet):
-    queryset=models.InstructorModel.objects.all()
+    queryset=models.InstructorModel.objects.all().prefetch_related('specialization')
     serializer_class=serializers.InstructorSerializer
     def get_permissions(self):
         if self.action in ['list','retrieve']:
@@ -38,7 +38,7 @@ class FitnessClassTimeViewset(viewsets.ModelViewSet):
             self.permission_classes=[IsAuthenticated,IsStaff]
         return super().get_permissions()
 class FitnessClassViewset(viewsets.ModelViewSet):
-    queryset=models.FitnessClassModel.objects.all()
+    queryset=models.FitnessClassModel.objects.all().select_related('instructor','topic')
     serializer_class=serializers.FitnessClassSerializer
     def get_permissions(self):
         if self.action in ['list','retrieve']:
