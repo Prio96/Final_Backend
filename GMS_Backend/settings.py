@@ -37,13 +37,18 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1','.vercel.app']
 
-CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:3000",
-    "http://localhost:3000"
-]
+# CORS_ALLOWED_ORIGINS = [
+#     "http://127.0.0.1:3000",
+#     "http://localhost:3000"
+# ]
 
-CORS_ALLOW_CREDENTIALS = True
+# CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST=(
+    "http://localhost:3000",
+    "http://localhost:8000",
+)
 
+CSRF_TRUSTED_ORIGINS=["http://localhost:3000"]
 # Application definition
 
 INSTALLED_APPS = [
@@ -54,8 +59,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders',
     'rest_framework',
+    'corsheaders',
     'rest_framework.authtoken',
     'django_filters',
     'class',
@@ -65,6 +70,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
