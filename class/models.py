@@ -1,5 +1,6 @@
 from django.db import models
 from member.models import MemberModel
+from cloudinary.models import CloudinaryField
 # Create your models here.
 
 class SpecializationModel(models.Model):
@@ -11,7 +12,7 @@ class SpecializationModel(models.Model):
 class InstructorModel(models.Model):
     name=models.CharField(max_length=100)
     email=models.EmailField(unique=True)
-    image=models.ImageField(upload_to='class/images/',null=True)
+    image=CloudinaryField('image')
     phone=models.CharField(max_length=12)
     specialization=models.ManyToManyField(SpecializationModel)#Assuming an instructor can have variety of specializations
     bio=models.TextField()
