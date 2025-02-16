@@ -15,7 +15,7 @@ class SpecializationViewset(viewsets.ModelViewSet):
     serializer_class=serializers.SpecializationSerializer
     def get_permissions(self):
         if self.action in ['list','retrieve']:
-            self.permission_classes=[AllowAny]
+            self.permission_classes=[IsAuthenticated,IsMember|IsStaff]
         else:
             self.permission_classes=[IsAuthenticated,IsStaff]
         return super().get_permissions()
