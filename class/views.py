@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from staff.permissions import IsStaff,UpdateOwnDetails,IsMember
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework import status
 from subscription.models import MemberSubscriptionModel
 from staff.models import is_member
@@ -15,7 +15,7 @@ class SpecializationViewset(viewsets.ModelViewSet):
     serializer_class=serializers.SpecializationSerializer
     def get_permissions(self):
         if self.action in ['list','retrieve']:
-            self.permission_classes=[]
+            self.permission_classes=[AllowAny]
         else:
             self.permission_classes=[IsAuthenticated,IsStaff]
         return super().get_permissions()
@@ -24,7 +24,7 @@ class InstructorViewset(viewsets.ModelViewSet):
     serializer_class=serializers.InstructorSerializer
     def get_permissions(self):
         if self.action in ['list','retrieve']:
-            self.permission_classes=[]
+            self.permission_classes=[AllowAny]
         else:
             self.permission_classes=[IsAuthenticated,IsStaff]
         return super().get_permissions()
@@ -33,7 +33,7 @@ class FitnessClassTimeViewset(viewsets.ModelViewSet):
     serializer_class=serializers.FitnessClassTimeSerializer
     def get_permissions(self):
         if self.action in ['list','retrieve']:
-            self.permission_classes=[]
+            self.permission_classes=[AllowAny]
         else:
             self.permission_classes=[IsAuthenticated,IsStaff]
         return super().get_permissions()
@@ -42,7 +42,7 @@ class FitnessClassViewset(viewsets.ModelViewSet):
     serializer_class=serializers.FitnessClassSerializer
     def get_permissions(self):
         if self.action in ['list','retrieve']:
-            self.permission_classes=[]
+            self.permission_classes=[AllowAny]
         else:
             self.permission_classes=[IsAuthenticated,IsStaff]
         return super().get_permissions()

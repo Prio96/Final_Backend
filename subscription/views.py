@@ -2,7 +2,7 @@ from rest_framework import viewsets
 from . import models
 from . import serializers
 from staff.permissions import IsStaff,UpdateOwnDetails
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import status
@@ -13,7 +13,7 @@ class MembershipPlanViewset(viewsets.ModelViewSet):
     serializer_class=serializers.MembershipPlanSerializer
     def get_permissions(self):
         if self.action in ['list','retrieve']:
-            self.permission_classes=[]
+            self.permission_classes=[AllowAny]
         else:
             self.permission_classes=[IsAuthenticated,IsStaff]
         return super().get_permissions()
