@@ -11,7 +11,12 @@ from django.shortcuts import get_object_or_404
 class MembershipPlanViewset(viewsets.ModelViewSet):
     queryset=models.MembershipPlanModel.objects.all()
     serializer_class=serializers.MembershipPlanSerializer
-    permission_classes=[IsAuthenticated,IsStaff]
+    def get_permissions(self):
+        if self.action in ['list','retrieve']:
+            self.permission_classes=[]
+        else:
+            self.permission_classes=[IsAuthenticated,IsStaff]
+        return super().get_permissions()
     
 class MemberSubscriptionViewset(viewsets.ModelViewSet):
     queryset=models.MemberSubscriptionModel.objects.all()

@@ -15,7 +15,7 @@ class SpecializationViewset(viewsets.ModelViewSet):
     serializer_class=serializers.SpecializationSerializer
     def get_permissions(self):
         if self.action in ['list','retrieve']:
-            self.permission_classes=[IsAuthenticated,IsMember|IsStaff]
+            self.permission_classes=[]
         else:
             self.permission_classes=[IsAuthenticated,IsStaff]
         return super().get_permissions()
@@ -24,7 +24,7 @@ class InstructorViewset(viewsets.ModelViewSet):
     serializer_class=serializers.InstructorSerializer
     def get_permissions(self):
         if self.action in ['list','retrieve']:
-            self.permission_classes=[IsAuthenticated,IsMember|IsStaff]
+            self.permission_classes=[]
         else:
             self.permission_classes=[IsAuthenticated,IsStaff]
         return super().get_permissions()
@@ -33,7 +33,7 @@ class FitnessClassTimeViewset(viewsets.ModelViewSet):
     serializer_class=serializers.FitnessClassTimeSerializer
     def get_permissions(self):
         if self.action in ['list','retrieve']:
-            self.permission_classes=[IsAuthenticated,IsMember|IsStaff]
+            self.permission_classes=[]
         else:
             self.permission_classes=[IsAuthenticated,IsStaff]
         return super().get_permissions()
@@ -42,7 +42,7 @@ class FitnessClassViewset(viewsets.ModelViewSet):
     serializer_class=serializers.FitnessClassSerializer
     def get_permissions(self):
         if self.action in ['list','retrieve']:
-            self.permission_classes=[IsAuthenticated,IsMember|IsStaff]
+            self.permission_classes=[]
         else:
             self.permission_classes=[IsAuthenticated,IsStaff]
         return super().get_permissions()
