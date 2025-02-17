@@ -37,31 +37,32 @@ class MemberRegistrationSerializer(serializers.ModelSerializer):
             'password', 'confirm_password', 'image', 
             'mobile_no', 'gender', 'weight', 'height'
         ]
-    
-    def validate(self, data):
-        if data['password'] != data['confirm_password']:
-            raise serializers.ValidationError({'error': 'Passwords do not match.'})
-        if User.objects.filter(email=data['email']).exists:
-            raise serializers.ValidationError({'error': 'Email already exists'})
-        return data
-    
-    def create(self, validated_data):
-        username = validated_data.pop('username')
-        first_name = validated_data.pop('first_name')
-        last_name = validated_data.pop('last_name')
-        email = validated_data.pop('email')
-        password = validated_data.pop('password')
         
-        user = User(
-            username=username, 
-            first_name=first_name, 
-            last_name=last_name, 
-            email=email
+    def save(self):
+        username=self.validated_data['username']
+        email=self.validated_data['email']
+        first_name=self.validated_data['first_name']
+        last_name=self.validated_data['last_name']
+        password=self.validated_data['password']
+        password2=self.validated_data['confirm_password']
+        
+        if password!=password2:
+            raise serializers.ValidationError({'error': 'Password does not match'})
+
+        if User.objects.filter(email=email).exists():
+            raise serializers.ValidationError({'error': "Email already exists"})
+        
+        account=User(username=username, email=email, first_name=first_name, last_name=last_name)
+        account.set_password(password)
+        account.save()
+        
+        MemberModel.objects.create(
+            user=account,
+            image=self.validated_data.get('image'),
+            mobile_no=self.validated_data.get('mobile_no'),
+            gender=self.validated_data.get('gender'),
+            weight=self.validated_data.get('weight'),
+            height=self.validated_data.get('height')    
         )
-        user.set_password(password)
-        user.save()
-        
-        member = MemberModel.objects.create(user=user, **validated_data)
-        
-        return member
+    
 
