@@ -7,5 +7,6 @@ router=DefaultRouter()
 router.register('members',views.MemberViewset)
 
 urlpatterns = [
-    path('',include(router.urls))
+    path('',include(router.urls)),
+    path('register/', views.MemberRegistrationApiView.as_view(), name='member-register'),
 ]

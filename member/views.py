@@ -14,3 +14,16 @@ class MemberViewset(viewsets.ModelViewSet):
     serializer_class=serializers.MemberSerializer
     permission_classes=[IsAuthenticated,IsStaff]
     parser_classes = (MultiPartParser, FormParser)
+    
+
+class MemberRegistrationApiView(APIView):
+    serializer_class = serializers.MemberRegistrationSerializer
+    
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"success": "Your account has been created successfully."}, status=201)
+        
+        return Response(serializer.errors, status=400)
