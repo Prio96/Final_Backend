@@ -49,8 +49,8 @@ class UserLoginApiView(APIView):
         return Response(serializer.errors)
     
 class UserLogoutView(APIView):
-    permission_classes=[IsAuthenticated]
     def get(self,request):
-        request.user.auth_token.delete()
-        logout(request)
+        if request.user.auth_token:
+            request.user.auth_token.delete()
+            logout(request)
         return redirect("login")
