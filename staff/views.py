@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from rest_framework import viewsets
+from rest_framework import viewsets,status
 from . import models
 from . import serializers
 from .permissions import IsStaff
@@ -49,8 +49,19 @@ class UserLoginApiView(APIView):
         return Response(serializer.errors)
     
 class UserLogoutView(APIView):
-    def get(self,request):
-        if request.user.is_authenticated:
-            request.user.auth_token.delete()
-            logout(request)
-        return redirect("login")
+    # def get(self,request):
+    #     if request.user.is_authenticated:
+    #         request.user.auth_token.delete()
+    #         logout(request)
+    #     return redirect("login")
+    
+    permission_classes = [IsAuthenticated] 
+    
+    def post(self, request):
+        try:
+            request.user.auth_token.delete()  
+        except (AttributeError, Token.DoesNotExist):
+            return Response({"error": "Invalid token or already logged out"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        logout(request)
+        return Response({"success": "Successfully logged out"}, status=status.HTTP_200_OK)
