@@ -50,7 +50,7 @@ class UserLoginApiView(APIView):
     
 class UserLogoutView(APIView):
     def get(self,request):
-        if request.user.auth_token:
+        if request.user.is_authenticated:
             request.user.auth_token.delete()
             logout(request)
         return redirect("login")
