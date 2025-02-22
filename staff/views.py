@@ -6,6 +6,7 @@ from .permissions import IsStaff
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
@@ -54,13 +55,15 @@ class UserLogoutView(APIView):
     #         request.user.auth_token.delete()
     #         logout(request)
     #     return redirect("login")
-    
-    def post(self, request):
-        try:
-            request.user.auth_token.delete()
-            logout(request)
-            return Response({"success": "Successfully logged out"}, status=status.HTTP_200_OK)  
-        except (AttributeError, Token.DoesNotExist):
-            return Response({"error": "Invalid token or already logged out"}, status=status.HTTP_400_BAD_REQUEST)
+    authentication_classes=[TokenAuthentication]
+    def get(self, request):
+        # print(request.user)
+        # print(self.request.user.auth_token)
+        print("User:", request.user)
+        print("Is Authenticated:", request.user.is_authenticated)
+        self.request.user.auth_token.delete()
+        # logout(request)
+        return redirect('login')
+       
         
         

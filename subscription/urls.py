@@ -9,4 +9,6 @@ router.register('availed_subscriptions',views.MemberSubscriptionViewset)
 
 urlpatterns = [
     path('',include(router.urls)),
+    path('subscribe/',views.MemberSubscriptionAPIView.as_view(),name='subscribe'),
+    path('update-subscription/',views.MemberSubscriptionAPIView.as_view(),name='update-subscription'),
 ]

@@ -44,7 +44,7 @@ class FitnessClassSerializer(serializers.ModelSerializer):
         model=models.FitnessClassModel
         fields='__all__'
 
-class FitnessClassBookingSerializer(serializers.ModelSerializer):
+class FitnessClassBookingSerializer(serializers.ModelSerializer): #Only applicable to DRF interface. Has no connection with frontend
     class_session=serializers.SlugRelatedField(
         queryset=models.FitnessClassModel.objects.all(),
         many=False,

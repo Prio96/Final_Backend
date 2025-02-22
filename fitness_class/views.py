@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework import status
 from subscription.models import MemberSubscriptionModel
 from staff.models import is_member
+from member.models import MemberModel
 from rest_framework.parsers import MultiPartParser, FormParser
 class SpecializationViewset(viewsets.ModelViewSet):
     queryset=models.SpecializationModel.objects.all().prefetch_related('fitnessclassmodel_set')
@@ -65,19 +66,21 @@ class FitnessClassBookingViewset(viewsets.ModelViewSet):
         return super().get_queryset()
     
 class BookClassOnlineAPIView(APIView):
-    #This view is only applicable for members. Staffs will have to use FitnessClassBookingViewset to book someone.
+    #This view is only applicable for members in frontend. Staffs will have to use FitnessClassBookingViewset to book someone.
     permission_classes=[IsAuthenticated,IsMember]
     
     def post(self,request,*args,**kwargs):
         user=request.user
-        if not is_member(user):
-            return Response({"error": "Only members can book classes."}, status=status.HTTP_403_FORBIDDEN)
-        
         # Create the booking
-        serializer = serializers.FitnessClassBookingSerializer(data=request.data, context={'request': request})
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        class_name=request.data.get('class_session')
+        class_session=models.FitnessClassModel.objects.get(name=class_name)
+        member_instance=MemberModel.objects.get(user=user)
+        if models.FitnessClassBookingModel.objects.filter(class_session=class_session, member=member_instance).exists():
+            return Response({"error":"You have already booked this class."},status=status.HTTP_400_BAD_REQUEST)
+        booking=models.FitnessClassBookingModel.objects.create(
+            class_session=class_session, member=member_instance
+        )
+        return Response({"message":"Class booked successfully", "booking_id":booking.id},status=status.HTTP_201_CREATED)
         
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
         
