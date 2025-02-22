@@ -7,7 +7,7 @@ class SpecializationSerializer(serializers.ModelSerializer):
     image=serializers.ImageField()
     class Meta:
         model=models.SpecializationModel
-        fields='__all__'
+        fields=['name','image']
 
 class InstructorSerializer(serializers.ModelSerializer):
     image = serializers.ImageField()
@@ -36,11 +36,12 @@ class FitnessClassSerializer(serializers.ModelSerializer):
         many=False,
         slug_field='name'
     )
-    topic=serializers.SlugRelatedField(
-        queryset=models.SpecializationModel.objects.all(),
-        many=False,
-        slug_field='name'
-    )
+    topic=SpecializationSerializer()
+    # topic=serializers.SlugRelatedField(
+    #     queryset=models.SpecializationModel.objects.all(),
+    #     many=False,
+    #     slug_field='name'
+    # )
     class Meta:
         model=models.FitnessClassModel
         fields='__all__'
