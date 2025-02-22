@@ -12,12 +12,20 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from rest_framework.authtoken.models import Token
 from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework import request
 
+class DebugTokenAuthentication(TokenAuthentication):
+    def authenticate(self, request):
+        print("Authenticating with token")
+        print("Authorization header (META):", request.META.get('HTTP_AUTHORIZATION'))
+        print("Authorization header (request.headers):", request.headers.get('Authorization'))
+        return super().authenticate(request)
 class StaffViewset(viewsets.ModelViewSet):
     queryset=models.StaffModel.objects.all()
     serializer_class=serializers.StaffSerializer
     permission_classes=[IsAuthenticated,IsStaff]
     parser_classes = (MultiPartParser, FormParser)
+    
 class UserRegistrationApiView(APIView):
     serializer_class=serializers.RegistrationSerializer
     
@@ -44,6 +52,8 @@ class UserLoginApiView(APIView):
                 print(token)
                 print(_)
                 login(request,user)
+                print("self.request.user:",self.request.user)
+                print("self.request.user.auth_token:",self.request.user.auth_token)
                 return Response({'token':token.key,'user_id':user.id})
             else:
                 return Response({'error':"Invalid Credentials"})
@@ -55,15 +65,22 @@ class UserLogoutView(APIView):
     #         request.user.auth_token.delete()
     #         logout(request)
     #     return redirect("login")
-    authentication_classes=[TokenAuthentication]
+    
+    authentication_classes = [DebugTokenAuthentication]
+    # permission_classes=[IsAuthenticated]  
     def get(self, request):
-        # print(request.user)
-        # print(self.request.user.auth_token)
+        print("Inside Logout")
         print("User:", request.user)
         print("Is Authenticated:", request.user.is_authenticated)
-        self.request.user.auth_token.delete()
-        # logout(request)
-        return redirect('login')
+        print("Request Headers:", request.headers)  # Debugging
+        
+        if 'Authorization' not in request.headers:
+            return Response({"error": "Authorization header is missing"}, status=400)
+        if request.user.is_authenticated:
+            request.auth.delete()
+            logout(request)
+            return Response({"message": "Successfully logged out"}, status=200)
+        return Response({"error": "User is not authenticated"}, status=400)
        
         
         
