@@ -6,6 +6,7 @@ from cloudinary.models import CloudinaryField
 
 class SpecializationModel(models.Model):
     name=models.CharField(max_length=50)
+    image=CloudinaryField('image')
 
     def __str__(self):
         return self.name
