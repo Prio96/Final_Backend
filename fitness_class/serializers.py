@@ -4,6 +4,7 @@ from member.models import MemberModel
 from staff.models import is_member
 
 class SpecializationSerializer(serializers.ModelSerializer):
+    image=serializers.ImageField()
     class Meta:
         model=models.SpecializationModel
         fields='__all__'
