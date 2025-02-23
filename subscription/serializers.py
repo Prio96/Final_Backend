@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from . import models
-from member.serializers import MemberSerializer
 from member.models import MemberModel
 class MembershipPlanSerializer(serializers.ModelSerializer):
     class Meta:

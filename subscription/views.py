@@ -7,7 +7,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import status
 from member.models import MemberModel
-from django.shortcuts import get_object_or_404
 from staff.models import is_member
 class MembershipPlanViewset(viewsets.ModelViewSet):
     queryset=models.MembershipPlanModel.objects.all()
@@ -19,7 +18,7 @@ class MembershipPlanViewset(viewsets.ModelViewSet):
             self.permission_classes=[IsAuthenticated,IsStaff]
         return super().get_permissions()
     
-class MemberSubscriptionViewset(viewsets.ModelViewSet): #Only for DRF interface
+class MemberSubscriptionViewset(viewsets.ModelViewSet): #Only for DRF interface. There are options for members too with required restrictions
     queryset=models.MemberSubscriptionModel.objects.all()
     serializer_class=serializers.MemberSubscriptionSerializer
     
@@ -31,6 +30,14 @@ class MemberSubscriptionViewset(viewsets.ModelViewSet): #Only for DRF interface
         else:
             self.permission_classes=[IsAuthenticated,IsStaff]
         return super().get_permissions()
+    
+    def get_queryset(self):
+        user = self.request.user
+        if is_member(user):
+            # Members can only see their own plan
+            return models.MemberSubscriptionModel.objects.filter(member__user=user)
+        # Staff can see all plans
+        return super().get_queryset()
     
     def perform_create(self, serializer):
         user=self.request.user

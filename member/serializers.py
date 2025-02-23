@@ -3,12 +3,14 @@ from . import models
 from django.contrib.auth.models import User
 from member.models import MemberModel,GENDER_CHOICES
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=User
+        fields=["id", "username", "first_name", "last_name", "email"]
+        
 class MemberSerializer(serializers.ModelSerializer):
     image = serializers.ImageField()
-    user=serializers.SlugRelatedField(
-        queryset=User.objects.all(),
-        slug_field='username'
-    )
+    user=UserSerializer()
     
     class Meta:
         model=models.MemberModel

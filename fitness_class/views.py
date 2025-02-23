@@ -71,7 +71,6 @@ class BookClassOnlineAPIView(APIView):
     
     def post(self,request,*args,**kwargs):
         user=request.user
-        # Create the booking
         class_name=request.data.get('class_session')
         class_session=models.FitnessClassModel.objects.get(name=class_name)
         member_instance=MemberModel.objects.get(user=user)

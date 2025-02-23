@@ -69,6 +69,7 @@ class FitnessClassBookingSerializer(serializers.ModelSerializer): #Only applicab
             if models.FitnessClassBookingModel.objects.filter(class_session=data['class_session'],member=data['member']).exists():
                 raise serializers.ValidationError("You have already booked this class.")
         return data
+    #Only applicable for DRF
     # Create action has been set in a way that a member will be able to book class only using their own credentials. 
     # Even if they try to book classes using someone else's credentials, that will be ignored and the wrong credential will be overwritten by the actual user's credentials. 
     # Also the staff will be able to book classes using anyone's name
