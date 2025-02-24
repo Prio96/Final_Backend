@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets,status
 from . import models
 from . import serializers
 from staff.permissions import IsStaff
@@ -24,9 +24,9 @@ class MemberRegistrationApiView(APIView):
         
         if serializer.is_valid():
             serializer.save()
-            return Response({"success": "Your account has been created successfully."}, status=201)
+            return Response({"success": "Your member account has been created successfully."}, status=status.HTTP_201_CREATED)
         
-        return Response(serializer.errors, status=400)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class MemberProfileAPIView(APIView):
     permission_classes=[IsAuthenticated]
@@ -37,7 +37,7 @@ class MemberProfileAPIView(APIView):
         try:
             member=models.MemberModel.objects.get(user=user)
         except models.MemberModel.DoesNotExist:
-            return Response({"error":"Member profile not found"},status=404)
+            return Response({"error":"Member profile not found"},status=status.HTTP_404_NOT_FOUND)
         
         member_data=serializers.MemberSerializer(member).data
         
