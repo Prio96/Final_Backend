@@ -60,7 +60,7 @@ class MemberSubscriptionAPIView(APIView):
             return Response({"error":"You already have a subscription"}, status=status.HTTP_400_BAD_REQUEST)
         
         serializer=serializers.MemberSubscriptionSerializer(subscription)
-        return Response(serializer.data)
+        return Response({"success":"Subscription successful!","data":serializer.data},status=status.HTTP_201_CREATED)
     
     def put(self, request):
         user=request.user
@@ -70,12 +70,14 @@ class MemberSubscriptionAPIView(APIView):
             return Response({"error":"You don't have an active subscription."}, status=status.HTTP_400_BAD_REQUEST)
         plan_id=request.data.get("plan")
         new_plan=models.MembershipPlanModel.objects.get(id=plan_id)
+        if subscription.plan==new_plan:
+            return Response({"error": "Already subscribed to this plan."},status=status.HTTP_400_BAD_REQUEST)
         
         subscription.plan=new_plan
         subscription.save()
         
         serializer=serializers.MemberSubscriptionSerializer(subscription)
-        return Response(serializer.data)
+        return Response({"success":"Plan updated successfully!", "data":serializer.data},status=status.HTTP_200_OK)
         
         
         
