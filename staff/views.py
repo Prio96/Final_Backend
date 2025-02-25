@@ -48,7 +48,7 @@ class UserLoginApiView(APIView):
                 
             else:
                 return Response({'error':"Invalid Credentials"}, status=status.HTTP_400_BAD_REQUEST)
-        return Response(serializer.errors)
+        return Response({'error':serializer.errors},status=status.HTTP_400_BAD_REQUEST)
     
 class UserLogoutView(APIView):
     authentication_classes = [TokenAuthentication]

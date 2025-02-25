@@ -46,11 +46,9 @@ class MemberRegistrationSerializer(serializers.ModelSerializer):
         first_name=self.validated_data['first_name']
         last_name=self.validated_data['last_name']
         password=self.validated_data['password']
-        password2=self.validated_data['confirm_password']
         
-        if password!=password2:
-            raise serializers.ValidationError({'error': 'Password does not match'})
-
+        #Password and confirm_password matching has been shifted to frontend for avoiding lag of calling API
+        
         if User.objects.filter(email=email).exists():
             raise serializers.ValidationError({'error': "Email already exists"})
         

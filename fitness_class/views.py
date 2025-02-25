@@ -79,7 +79,7 @@ class BookClassOnlineAPIView(APIView):
         booking=models.FitnessClassBookingModel.objects.create(
             class_session=class_session, member=member_instance
         )
-        return Response({"message":"Class booked successfully", "booking_id":booking.id},status=status.HTTP_201_CREATED)
+        return Response({"success":"Class booked successfully", "booking_id":booking.id},status=status.HTTP_201_CREATED)
         
         
         

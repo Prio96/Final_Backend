@@ -49,7 +49,15 @@ class MemberSubscriptionViewset(viewsets.ModelViewSet): #Only for DRF interface.
 
 class MemberSubscriptionAPIView(APIView):
     permission_classes=[IsAuthenticated,IsMember]
-    
+    def get(self, request):
+        user=request.user
+        try:
+            subscription=models.MemberSubscriptionModel.objects.get(member=user.member)
+            serializer=serializers.MemberSubscriptionSerializer(subscription)
+            return Response({"success":"Got user's current plan","data":serializer.data},status=status.HTTP_200_OK)
+        except models.MemberSubscriptionModel.DoesNotExist:
+            return Response({"error":"No active subscription"}, status=status.HTTP_404_NOT_FOUND)
+        
     def post(self, request):
         user=request.user
         plan_id=request.data.get('plan')

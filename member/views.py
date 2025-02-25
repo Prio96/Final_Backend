@@ -26,7 +26,7 @@ class MemberRegistrationApiView(APIView):
             serializer.save()
             return Response({"success": "Your member account has been created successfully."}, status=status.HTTP_201_CREATED)
         
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error':serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
     
 class MemberProfileAPIView(APIView):
     permission_classes=[IsAuthenticated]
