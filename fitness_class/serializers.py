@@ -36,16 +36,26 @@ class FitnessClassSerializer(serializers.ModelSerializer):
         many=False,
         slug_field='name'
     )
-    topic=SpecializationSerializer()
-    # topic=serializers.SlugRelatedField(
-    #     queryset=models.SpecializationModel.objects.all(),
-    #     many=False,
-    #     slug_field='name'
-    # )
+    
+    topic=serializers.SlugRelatedField(
+        queryset=models.SpecializationModel.objects.all(),
+        many=False,
+        slug_field='name'
+    )
     class Meta:
         model=models.FitnessClassModel
         fields='__all__'
-
+    def to_representation(self, instance):
+        
+        data=super().to_representation(instance)
+        topic_instance=instance.topic
+        
+        data['topic']={
+            "name":topic_instance.name,
+            "image":topic_instance.image.url,
+        }
+        return data
+    
 class FitnessClassBookingSerializer(serializers.ModelSerializer): #Only applicable to DRF interface. Has no connection with frontend
     class_session=serializers.SlugRelatedField(
         queryset=models.FitnessClassModel.objects.all(),
