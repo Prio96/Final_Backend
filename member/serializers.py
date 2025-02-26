@@ -7,7 +7,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model=User
         fields=["id", "username", "first_name", "last_name", "email"]
-        
+     
 class MemberSerializer(serializers.ModelSerializer):
     image = serializers.ImageField()
     user=UserSerializer()

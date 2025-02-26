@@ -9,13 +9,14 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from fitness_class.models import FitnessClassBookingModel
 from fitness_class.serializers import FitnessClassBookingSerializer
 
+
 class MemberViewset(viewsets.ModelViewSet):
     queryset=models.MemberModel.objects.all()
     serializer_class=serializers.MemberSerializer
     permission_classes=[IsAuthenticated,IsStaff]
     parser_classes = (MultiPartParser, FormParser)
-    
 
+   
 class MemberRegistrationApiView(APIView):
     serializer_class = serializers.MemberRegistrationSerializer
     

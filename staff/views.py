@@ -1,21 +1,33 @@
 from rest_framework import viewsets,status
 from . import models
 from . import serializers
-from .permissions import IsStaff
+from .permissions import IsStaff,DenyAll
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import TokenAuthentication,SessionAuthentication
+from rest_framework import permissions
+from rest_framework.authentication import TokenAuthentication
 from django.contrib.auth import authenticate,login,logout
 from rest_framework.authtoken.models import Token
 from rest_framework.parsers import MultiPartParser, FormParser
+from member.serializers import UserSerializer,User
 
 class StaffViewset(viewsets.ModelViewSet):
     queryset=models.StaffModel.objects.all()
     serializer_class=serializers.StaffSerializer
     permission_classes=[IsAuthenticated,IsStaff]
     parser_classes = (MultiPartParser, FormParser)
-
+#This viewset is only for viewing available users by staffs and superuser in the system. There are Memberviewset and Staffviewset for other functions.     
+class UserViewset(viewsets.ModelViewSet):
+    queryset=models.User.objects.all()
+    serializer_class=UserSerializer
+    def get_permissions(self):
+        if self.action in ['list','retrieve']:
+            self.permission_classes=[IsAuthenticated,IsStaff]
+        else:
+            self.permission_classes=[DenyAll]
+        return super().get_permissions()      
+#In DRF, upon registration, a user is created. And the user can be assigned a role(Member or staff) by going to Memberviewset and Staffviewset respectively by any staff or superuser. The registration view (exclusively for member in frontend) has been created at member.views    
 class UserRegistrationApiView(APIView):
     serializer_class=serializers.RegistrationSerializer
     

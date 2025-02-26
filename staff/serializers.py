@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from . import models
 from django.contrib.auth.models import User
-
+        
 class StaffSerializer(serializers.ModelSerializer):
     image = serializers.ImageField()
     user=serializers.SlugRelatedField(
@@ -12,9 +12,7 @@ class StaffSerializer(serializers.ModelSerializer):
     class Meta:
         model=models.StaffModel
         fields='__all__'
-    
-    
-        
+     
 class RegistrationSerializer(serializers.ModelSerializer):
     confirm_password=serializers.CharField(required=True)
     class Meta:
