@@ -45,7 +45,7 @@ class FitnessClassViewset(viewsets.ModelViewSet):
             self.permission_classes=[IsAuthenticated,IsStaff]
         return super().get_permissions()
 class FitnessClassBookingViewset(viewsets.ModelViewSet):
-    queryset=models.FitnessClassBookingModel.objects.all().order_by("booking_date")
+    queryset=models.FitnessClassBookingModel.objects.all().order_by("-booking_date")
     serializer_class=serializers.FitnessClassBookingSerializer
     def get_permissions(self):
         if self.action in ['list','retrieve']:
