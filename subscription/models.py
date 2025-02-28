@@ -1,5 +1,4 @@
 from django.db import models
-from datetime import timedelta,date
 from member.models import MemberModel
 
 class MembershipPlanModel(models.Model):

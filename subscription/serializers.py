@@ -18,3 +18,4 @@ class MemberSubscriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model=models.MemberSubscriptionModel
         fields='__all__'
+    

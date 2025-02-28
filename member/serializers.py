@@ -10,11 +10,27 @@ class UserSerializer(serializers.ModelSerializer):
      
 class MemberSerializer(serializers.ModelSerializer):
     image = serializers.ImageField()
-    user=UserSerializer()
+    user=serializers.SlugRelatedField(
+        queryset=User.objects.all(),
+        slug_field='username' #slug_field override done by to_representation function
+    )
     
     class Meta:
         model=models.MemberModel
         fields='__all__'
+        
+    def to_representation(self, instance):
+        
+        data=super().to_representation(instance)
+        user_instance=instance.user
+        
+        data['user']={
+            "username":user_instance.username,
+            "first_name":user_instance.first_name,
+            "last_name":user_instance.last_name,
+            "email":user_instance.email
+        }
+        return data
         
 class MemberRegistrationSerializer(serializers.ModelSerializer):
     # User model fields

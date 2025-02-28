@@ -25,9 +25,9 @@ class MemberRegistrationApiView(APIView):
         
         if serializer.is_valid():
             serializer.save()
-            return Response({"success": "Your member account has been created successfully."}, status=status.HTTP_201_CREATED)
+            return Response({"success": "Your member account has been created successfully."}, status=status.HTTP_201_CREATED) #Shown in frontend after registration
         
-        return Response({'error':serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error':serializer.errors}, status=status.HTTP_400_BAD_REQUEST) #Same email error, shown in frontend
     
 class MemberProfileAPIView(APIView):
     permission_classes=[IsAuthenticated]
@@ -38,14 +38,14 @@ class MemberProfileAPIView(APIView):
         try:
             member=models.MemberModel.objects.get(user=user)
         except models.MemberModel.DoesNotExist:
-            return Response({"error":"Member profile not found"},status=status.HTTP_404_NOT_FOUND)
+            return Response({"error":"Member profile unavailable"},status=status.HTTP_404_NOT_FOUND)#Shown in frontend if a staff or non-member user logs in instead of a member
         
         member_data=serializers.MemberSerializer(member).data
         
         bookings=FitnessClassBookingModel.objects.filter(member=member)
-        booking_data=FitnessClassBookingSerializer(bookings, many=True).data
+        booking_data=FitnessClassBookingSerializer(bookings,many=True).data
         
-        return Response({"member":member_data,"bookings":booking_data})
+        return Response({"member":member_data,"bookings":booking_data})#Shown in console
 
         
         

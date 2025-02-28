@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from . import models
 from member.models import MemberModel
-from staff.models import is_member
 
 class SpecializationSerializer(serializers.ModelSerializer):
     image=serializers.ImageField()
@@ -40,8 +39,8 @@ class FitnessClassSerializer(serializers.ModelSerializer):
     topic=serializers.SlugRelatedField(
         queryset=models.SpecializationModel.objects.all(),
         many=False,
-        slug_field='name'
-    )
+        slug_field='name'#slug_field override done by to_representation function
+    ) 
     class Meta:
         model=models.FitnessClassModel
         fields='__all__'
@@ -70,25 +69,10 @@ class FitnessClassBookingSerializer(serializers.ModelSerializer): #Only applicab
         model=models.FitnessClassBookingModel
         fields='__all__'
     def validate(self, data):
-        user=self.context['request'].user
-        if is_member(user):
-            member=MemberModel.objects.get(user=user)
-            if models.FitnessClassBookingModel.objects.filter(class_session=data['class_session'],member=member).exists():
-                raise serializers.ValidationError("You have already booked this class.")
-        else:
-            if models.FitnessClassBookingModel.objects.filter(class_session=data['class_session'],member=data['member']).exists():
-                raise serializers.ValidationError("You have already booked this class.")
+        if models.FitnessClassBookingModel.objects.filter(class_session=data['class_session'],member=data['member']).exists():
+            raise serializers.ValidationError("You have already booked this class.")
         return data
-    #Only applicable for DRF
-    # Create action has been set in a way that a member will be able to book class only using their own credentials. 
-    # Even if they try to book classes using someone else's credentials, that will be ignored and the wrong credential will be overwritten by the actual user's credentials. 
-    # Also the staff will be able to book classes using anyone's name
-    def create(self, validated_data):
-        user = self.context['request'].user
-        if is_member(user):
-            member_instance = MemberModel.objects.get(user=user)
-            validated_data['member']=member_instance
-        return super().create(validated_data)
+    
             
         
 

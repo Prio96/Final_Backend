@@ -11,8 +11,8 @@ class MemberModel(models.Model):
     image=CloudinaryField('image')
     mobile_no=models.CharField(max_length=12)
     gender=models.CharField(max_length=8,choices=GENDER_CHOICES)
-    weight=models.FloatField(help_text="Weight in kilograms")
-    height=models.FloatField(help_text="Height in centimeters")
+    weight=models.FloatField(help_text="Weight in kilograms")#help_text only viewed in DRF
+    height=models.FloatField(help_text="Height in centimeters")#help_text only viewed in DRF
     date_joined=models.DateField(auto_now_add=True)
     
     def __str__(self):
