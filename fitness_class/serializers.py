@@ -6,7 +6,7 @@ class SpecializationSerializer(serializers.ModelSerializer):
     image=serializers.ImageField()
     class Meta:
         model=models.SpecializationModel
-        fields=['name','image']
+        fields='__all__'
 
 class InstructorSerializer(serializers.ModelSerializer):
     image = serializers.ImageField()
